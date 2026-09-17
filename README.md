@@ -38,4 +38,4 @@ Installing Antigravity 2.x on Linux currently encounters three major friction po
 Run directly via `curl`:
 
 ```bash
-curl -fsSL [https://raw.githubusercontent.com/](https://raw.githubusercontent.com/)<YOUR_GITHUB_USERNAME>/antigravity-ubuntu-installer/main/install-antigravity.sh | bash
+curl -fsSL https://raw.githubusercontent.com/anjanatharusha/antigravity-ubuntu-installer/main/install-antigravity.sh | bash
