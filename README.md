@@ -16,20 +16,13 @@ Installing Antigravity 2.x on Linux currently encounters three major friction po
 
 ## What This Script Does
 
-* Extracts `Antigravity*.tar.gz` directly into `/opt/Antigravity-x64`.
-* Creates a system-wide symlink at `/usr/local/bin/antigravity`.
-* Configures `chrome-sandbox` with `chown root:root` and `chmod 4755`.
-* Installs the official vector SVG brandmark directly into `/usr/share/icons/hicolor/scalable/apps/antigravity.svg` for sharp rendering at all resolutions.
-* Generates a FreeDesktop-compliant `/usr/share/applications/antigravity.desktop` file.
-* Updates `gtk-update-icon-cache` and flushes user thumbnail caches.
-
----
-
-## Prerequisites
-
-1. Download the official Linux tarball (`Antigravity*.tar.gz`) from:  
-   **[https://antigravity.google/download](https://antigravity.google/download)**
-2. Ensure the downloaded `.tar.gz` file is located in your `~/Downloads` directory.
+* **Automated Package Resolution:** Checks `~/Downloads` for an existing `Antigravity*.tar.gz`; if not present, downloads the latest archive automatically.
+* **Installation:** Extracts the package cleanly into `/opt/Antigravity-x64`.
+* **Global CLI Access:** Creates a system-wide symlink at `/usr/local/bin/antigravity`.
+* **Sandbox Configuration:** Sets `chown root:root` and `chmod 4755` on `chrome-sandbox`.
+* **Vector Icon Integration:** Installs the official vector SVG brandmark directly into `/usr/share/icons/hicolor/scalable/apps/antigravity.svg` for sharp rendering across all display scales.
+* **Desktop Launcher:** Generates a FreeDesktop-compliant `/usr/share/applications/antigravity.desktop` entry.
+* **Cache Rebuilding:** Triggers `gtk-update-icon-cache`, `update-desktop-database`, and clears stale thumbnail caches.
 
 ---
 
