@@ -2,22 +2,31 @@ cat << 'EOF' > install-antigravity.sh
 #!/usr/bin/env bash
 set -euo pipefail
 
+DOWNLOAD_URL="https://antigravity.google/download/linux/tarball" # Adjust if direct static link differs
+TMP_DIR=$(mktemp -d)
+trap 'rm -rf "$TMP_DIR"' EXIT
+
 echo "==> Starting Google Antigravity 2.x setup..."
 
-# 1. Verify tarball existence
-TARBALL=$(find "$HOME/Downloads" -maxdepth 1 -name "Antigravity*.tar.gz" | head -n 1)
+# 1. Check for existing local archive, otherwise download
+LOCAL_TARBALL=$(find "$HOME/Downloads" -maxdepth 1 -name "Antigravity*.tar.gz" 2>/dev/null | head -n 1 || true)
 
-if [[ -z "$TARBALL" ]]; then
-  echo "Error: No Antigravity*.tar.gz archive found in $HOME/Downloads."
-  echo "Please download the Linux tarball from https://antigravity.google/download first."
-  exit 1
+if [[ -n "$LOCAL_TARBALL" ]]; then
+  echo "==> Using local archive: $LOCAL_TARBALL"
+  TARBALL_PATH="$LOCAL_TARBALL"
+else
+  echo "==> Downloading Antigravity 2.x tarball..."
+  TARBALL_PATH="$TMP_DIR/antigravity.tar.gz"
+  curl -fSL --progress-bar "$DOWNLOAD_URL" -o "$TARBALL_PATH" || {
+    echo "Error: Automated download failed. Please download the tarball manually from https://antigravity.google/download to ~/Downloads and rerun."
+    exit 1
+  }
 fi
 
-echo "==> Found archive: $TARBALL"
-
-# 2. Extract binary to /opt
+# 2. Extract to /opt
 echo "==> Extracting to /opt/..."
-sudo tar -xzf "$TARBALL" -C /opt/
+sudo mkdir -p /opt/Antigravity-x64
+sudo tar -xzf "$TARBALL_PATH" -C /opt/
 
 # 3. Create global execution symlink
 echo "==> Creating global symlink in /usr/local/bin..."
@@ -28,7 +37,7 @@ echo "==> Setting SUID permissions on chrome-sandbox..."
 sudo chown root:root /opt/Antigravity-x64/chrome-sandbox
 sudo chmod 4755 /opt/Antigravity-x64/chrome-sandbox
 
-# 5. Install the official vector SVG icon to hicolor theme
+# 5. Install vector icon to hicolor theme
 echo "==> Installing official vector brandmark to icon theme..."
 sudo mkdir -p /usr/share/icons/hicolor/scalable/apps
 
@@ -90,6 +99,6 @@ sudo gtk-update-icon-cache -f /usr/share/icons/hicolor
 sudo update-desktop-database
 rm -rf "$HOME/.cache/thumbnails/*" "$HOME/.cache/icon-cache.kcache" 2>/dev/null || true
 
-echo "==> Complete! Antigravity 2.x is installed and configured."
+echo "==> Complete! Antigravity 2.x is installed and ready."
 EOF
 chmod +x install-antigravity.sh
